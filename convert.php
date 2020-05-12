@@ -20,8 +20,19 @@ try {
     return 1;
 }
 
+// Ensure we have some valid headers to work with.
+$headers = collect($csv->getHeader())
+    ->map(function($header) {
+        return trim(str_replace(" ", "_", $header));
+    })->toArray();
+
+if (count($headers) == 0) {
+    echo "No valid headers found";
+    return 1;
+}
+
 // Extract the records from the $csv object
-$records = Statement::create()->process($csv);
+$records = Statement::create()->process($csv, $headers);
 
 // Generate our text content
 $output = collect($records->getRecords())
