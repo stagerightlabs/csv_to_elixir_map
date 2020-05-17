@@ -1,5 +1,7 @@
 extern crate rand;
 
+use rand::Rng;
+use rand::distributions::Alphanumeric;
 use std::env;
 use std::error::Error;
 use std::ffi::OsString;
@@ -7,8 +9,8 @@ use std::collections::HashMap;
 use std::fs::File;
 use std::process;
 use std::io::prelude::*;
-use rand::Rng;
-use rand::distributions::Alphanumeric;
+use std::vec::Vec;
+
 
 type Record = HashMap<String, String>;
 
@@ -22,6 +24,7 @@ fn run() -> Result<(), Box<dyn Error>> {
     // Read the CSV file
     let file_path = get_first_arg()?;
     let mut rdr = csv::Reader::from_path(file_path)?;
+    let headers = create_header_map(rdr.headers()?.clone());
 
     // Determine our output path
     let output_path = get_second_arg();
@@ -36,10 +39,15 @@ fn run() -> Result<(), Box<dyn Error>> {
         let mut row : String = "%{".to_string();
 
         // Loop over each key value pair in the record to assemble an elixir map
-        for (k, v) in &record {
-            row.push_str(k);
+        for key in &headers {
+            row.push_str(key);
             row.push_str(": ");
-            row.push_str(maybe_encapsulate(v.to_string()).as_str());
+
+            match record.get(key) {
+                Some(value) => row.push_str(maybe_encapsulate(value.to_string()).as_str()),
+                None => row.push_str("\"\""),
+            }
+
             row.push_str(", ");
         }
 
@@ -115,6 +123,26 @@ fn maybe_encapsulate(value: String) -> String {
             return ret;
         },
     }
+}
+
+fn create_header_map(headers: csv::StringRecord) -> Vec<String> {
+    let mut map: Vec<String> = vec![];
+    let mut n = 0;
+    let mut done = false;
+
+    while !done {
+        match headers.get(n) {
+            Some(value) => {
+                map.push(value.to_string());
+                n = n + 1;
+            },
+            None => {
+                done = true;
+            },
+        }
+    }
+
+    return map;
 }
 
 fn main() {
