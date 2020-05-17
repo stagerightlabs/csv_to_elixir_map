@@ -1,25 +1,22 @@
 extern crate rand;
 
-use rand::Rng;
 use rand::distributions::Alphanumeric;
+use rand::Rng;
+use std::collections::HashMap;
 use std::env;
 use std::error::Error;
 use std::ffi::OsString;
-use std::collections::HashMap;
 use std::fs::File;
-use std::process;
 use std::io::prelude::*;
-use std::vec::Vec;
-
+use std::process;
 
 type Record = HashMap<String, String>;
 
 // This method represents the bulk of our program. It will
 // return an error to main if something goes wrong.
 fn run() -> Result<(), Box<dyn Error>> {
-
     // Prepare a string to serve as an output buffer of sorts
-    let mut output : String = "[\n".to_string();
+    let mut output: String = "[\n".to_string();
 
     // Read the CSV file
     let file_path = get_first_arg()?;
@@ -36,7 +33,7 @@ fn run() -> Result<(), Box<dyn Error>> {
     // Loop over each record and add it to our output file
     for result in rdr.deserialize() {
         let record: Record = result?;
-        let mut row : String = "%{".to_string();
+        let mut row: String = "%{".to_string();
 
         // Loop over each key value pair in the record to assemble an elixir map
         for key in &headers {
@@ -85,7 +82,7 @@ fn run() -> Result<(), Box<dyn Error>> {
 fn get_first_arg() -> Result<OsString, Box<dyn Error>> {
     match env::args_os().nth(1) {
         None => Err(From::from("Expected 1 argument but got none")),
-        Some(file_path) => Ok(file_path)
+        Some(file_path) => Ok(file_path),
     }
 }
 
@@ -94,7 +91,7 @@ fn get_first_arg() -> Result<OsString, Box<dyn Error>> {
 fn get_second_arg() -> String {
     match env::args_os().nth(2) {
         None => random_ascii_string(10).to_string() + &".txt".to_string(),
-        Some(file_path) => file_path.into_string().unwrap()
+        Some(file_path) => file_path.into_string().unwrap(),
     }
 }
 
@@ -121,7 +118,7 @@ fn maybe_encapsulate(value: String) -> String {
             ret.push_str("\"");
 
             return ret;
-        },
+        }
     }
 }
 
@@ -135,10 +132,10 @@ fn create_header_map(headers: csv::StringRecord) -> Vec<String> {
             Some(value) => {
                 map.push(value.to_string());
                 n = n + 1;
-            },
+            }
             None => {
                 done = true;
-            },
+            }
         }
     }
 
