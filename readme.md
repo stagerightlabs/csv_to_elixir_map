@@ -16,7 +16,7 @@ cargo build
 csvmap path/to/file.csv output_file.txt
 ```
 
-## Inspiration
+## Credits
 
 - https://docs.rs/csv/1.1.3/csv/tutorial/index.html
 - https://raw.githubusercontent.com/BurntSushi/rust-csv/master/examples/data/uspop.csv
