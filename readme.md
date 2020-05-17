@@ -1,6 +1,6 @@
 # CSV to Elixir Map Array
 
-I recently found myself creating a handful of large static maps in elixir using data from CSV files.  I wrote this tool to automate the conversion for me. The goal was to be able to paste the output directly into a `seeder.exs` file.
+I recently found myself creating a handful of large static maps in Elixir using data from CSV files.  I wrote this tool to automate the conversion for me. The goal was to be able to paste the output directly into a `seeder.exs` file.
 
 ## Setup
 
