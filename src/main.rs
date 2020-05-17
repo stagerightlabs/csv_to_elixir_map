@@ -122,6 +122,7 @@ fn maybe_encapsulate(value: String) -> String {
     }
 }
 
+// Convert the header StringRecord into an iterable vector
 fn create_header_map(headers: csv::StringRecord) -> Vec<String> {
     let mut map: Vec<String> = vec![];
     let mut n = 0;
